@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRIDE — Footwear, Sneakers, Sandals & Chappal Store</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        :root {
+            --bg: #f5f2eb;
+            --bg-accent: #ebe5d9;
+            --surface: #ffffff;
+            --ink: #141619;
+            --muted: #5c626e;
+            --accent: #d94e1f;
+            --accent-hover: #b83f16;
+            --green: #15803d;
+            --gold: #eab308;
+            --red: #dc2626;
+            --line: #e3ddd1;
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 12% 8%, rgba(217, 78, 31, 0.08), transparent 36%),
+                radial-gradient(circle at 88% 18%, rgba(20, 22, 25, 0.06), transparent 40%),
+                radial-gradient(var(--bg-accent) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 22px 22px;
+            color: var(--ink);
+            line-height: 1.5;
+        }
+
+        .offer-bar {
+            background: var(--ink); color: #f8fafc; text-align: center;
+            font-size: 12.5px; padding: 8px 14px; letter-spacing: 0.25px;
+        }
+        .offer-bar code {
+            background: rgba(217, 78, 31, 0.28); color: #fed7aa; padding: 2px 7px;
+            border-radius: 5px; font-weight: 700;
+        }
+
+        header {
+            position: sticky; top: 0; z-index: 40;
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--line); padding: 13px 28px;
+            display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+        }
+        .brand {
+            font-size: 25px; font-weight: 900; letter-spacing: -0.9px; color: var(--ink);
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .brand-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+
+        .nav-menu { display: flex; align-items: center; gap: 18px; }
+        .nav-menu a { text-decoration: none; color: var(--ink); font-size: 13.5px; font-weight: 600; }
+        .nav-menu a:hover { color: var(--accent); }
+
+        .search-area { position: relative; flex: 1; max-width: 320px; min-width: 195px; }
+        .search-form {
+            display: flex; align-items: center; background: #f8f6f2;
+            border: 1px solid var(--line); border-radius: 999px; padding: 4px 5px 4px 15px;
+        }
+        .search-form input {
+            flex: 1; border: none; background: transparent; outline: none; font-size: 13px; color: var(--ink);
+        }
+        .search-form button {
+            background: var(--ink); color: #fff; border: none; border-radius: 999px;
+            padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer;
+        }
+        .search-form button:hover { background: var(--accent); }
+
+        .live-dropdown {
+            position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+            background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+            box-shadow: 0 18px 36px rgba(20, 22, 25, 0.14); z-index: 65;
+            display: none; overflow: hidden; max-height: 350px; overflow-y: auto;
+        }
+        .live-dropdown.open { display: block; }
+        .live-item {
+            display: flex; align-items: center; gap: 10px; padding: 10px 13px;
+            border-bottom: 1px solid #f1ede4; cursor: pointer;
+        }
+        .live-item:hover { background: #faf7f2; }
+        .live-item img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: #f1f5f9; }
+
+        .nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .pill-btn {
+            background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+            padding: 8px 13px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+        }
+        .pill-btn:hover { border-color: var(--ink); }
+        .pill-cart { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .pill-cart:hover { background: var(--accent-hover); }
+        .badge-num {
+            background: var(--ink); color: #fff; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 800;
+        }
+        .pill-cart .badge-num { background: rgba(255,255,255,0.24); }
+
+        .hero-wrap { max-width: 1260px; margin: 22px auto 0; padding: 0 20px; }
+        .hero-banner {
+            background: linear-gradient(125deg, #141619 0%, #23272e 60%, #461c0b 100%);
+            color: #fff; border-radius: 24px; overflow: hidden;
+            display: grid; grid-template-columns: 1.15fr 0.85fr; min-height: 400px;
+            box-shadow: 0 18px 40px rgba(20, 22, 25, 0.12);
+        }
+        .hero-left { padding: 44px 40px; display: flex; flex-direction: column; justify-content: center; }
+        .hero-tag {
+            display: inline-block; width: fit-content; background: rgba(217, 78, 31, 0.24);
+            color: #fed7aa; border: 1px solid rgba(254, 215, 170, 0.35);
+            padding: 5px 12px; border-radius: 999px; font-size: 11.5px; font-weight: 700; margin-bottom: 14px;
+        }
+        .hero-left h1 { font-size: clamp(32px, 4.3vw, 48px); line-height: 1.08; font-weight: 900; margin-bottom: 14px; }
+        .hero-left p { color: #d1d5db; font-size: 15px; margin-bottom: 24px; max-width: 500px; }
+        .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-accent {
+            background: var(--accent); color: #fff; border: none; padding: 11px 22px;
+            border-radius: 999px; font-size: 13.5px; font-weight: 700; cursor: pointer; text-decoration: none;
+        }
+        .btn-accent:hover { background: var(--accent-hover); }
+        .btn-outline-light {
+            background: rgba(255,255,255,0.09); color: #fff; border: 1px solid rgba(255,255,255,0.22);
+            padding: 11px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none;
+        }
+        .hero-right { position: relative; background: #1e293b; }
+        .hero-right img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero-float {
+            position: absolute; bottom: 18px; left: 18px; right: 18px;
+            background: rgba(20, 22, 25, 0.86); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 12px 16px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .trust-bar {
+            max-width: 1260px; margin: 18px auto 0; padding: 0 20px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+        }
+        .trust-item {
+            background: rgba(255, 255, 255, 0.92); border: 1px solid var(--line);
+            border-radius: 14px; padding: 14px 16px;
+        }
+        .trust-item strong { display: block; font-size: 13.5px; }
+        .trust-item span { font-size: 12px; color: var(--muted); }
+
+        .container { max-width: 1260px; margin: 40px auto 0; padding: 0 20px; }
+        .head-row {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            gap: 14px; margin-bottom: 16px; flex-wrap: wrap;
+        }
+        .sec-title { font-size: 25px; font-weight: 900; letter-spacing: -0.4px; }
+        .sec-sub { font-size: 13.5px; color: var(--muted); }
+
+        .filter-panel {
+            background: rgba(255, 255, 255, 0.9); border: 1px solid var(--line);
+            border-radius: 18px; padding: 16px 18px; margin-bottom: 22px;
+        }
+        .filter-strip {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; flex-wrap: wrap;
+        }
+        .pills { display: flex; gap: 7px; flex-wrap: wrap; }
+        .cat-chip {
+            padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line);
+            background: var(--surface); color: var(--ink); text-decoration: none;
+            font-size: 12.5px; font-weight: 600; transition: 0.18s; cursor: pointer;
+        }
+        .cat-chip:hover, .cat-chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+        .sub-filters {
+            display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+            margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);
+        }
+        .f-select {
+            padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line);
+            background: var(--surface); font-size: 12.5px; font-weight: 600; cursor: pointer;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
+        .card {
+            background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+            overflow: hidden; display: flex; flex-direction: column;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(20, 22, 25, 0.09); }
+
+        .thumb { position: relative; height: 230px; background: #f3f0ea; overflow: hidden; cursor: pointer; }
+        .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+        .card:hover .thumb img { transform: scale(1.06); }
+        .tag-group { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+        .tag-cat {
+            background: rgba(20, 22, 25, 0.85); color: #fff; font-size: 11px;
+            font-weight: 700; padding: 4px 10px; border-radius: 999px;
+        }
+        .tag-off {
+            background: var(--green); color: #fff; font-size: 11px;
+            font-weight: 800; padding: 4px 9px; border-radius: 999px;
+        }
+        .fav-btn {
+            position: absolute; top: 12px; right: 12px; width: 35px; height: 35px;
+            border-radius: 50%; border: none; background: rgba(255,255,255,0.94);
+            font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .fav-btn.active { color: var(--red); }
+
+        .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+        .meta-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .brand-lbl { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
+        .rate-lbl { font-size: 12.5px; font-weight: 700; }
+        .rate-lbl span { color: var(--gold); }
+        .p-name { font-size: 16px; font-weight: 800; margin-bottom: 5px; cursor: pointer; }
+        .p-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; flex: 1; }
+
+        .size-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .size-head span { font-size: 11.5px; font-weight: 700; color: var(--muted); }
+        .size-guide-link { font-size: 11.5px; color: var(--accent); font-weight: 700; cursor: pointer; text-decoration: underline; background: none; border: none; }
+
+        .size-list { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+        .sz-btn {
+            padding: 4px 9px; border-radius: 7px; border: 1px solid var(--line);
+            background: #faf8f4; font-size: 11.5px; font-weight: 700; cursor: pointer;
+        }
+        .sz-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+        .sz-btn.sold {
+            background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0;
+            text-decoration: line-through; cursor: not-allowed;
+        }
+
+        .price-line { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+        .price-now { font-size: 20px; font-weight: 900; }
+        .price-mrp { font-size: 13px; color: var(--muted); text-decoration: line-through; margin-left: 6px; }
+        .stock-ok { font-size: 12px; font-weight: 700; color: var(--green); }
+        .stock-low { font-size: 12px; font-weight: 700; color: var(--red); }
+
+        .btn-row { display: grid; grid-template-columns: auto 1fr 1fr; gap: 7px; }
+        .btn-info {
+            background: #fff; border: 1px solid var(--line); color: var(--ink);
+            padding: 9px 10px; border-radius: 9px; font-size: 12px; font-weight: 700; cursor: pointer;
+        }
+        .btn-cart {
+            background: var(--ink); color: #fff; border: none; padding: 9px 10px;
+            border-radius: 9px; font-size: 12.5px; font-weight: 700; cursor: pointer;
+        }
+        .btn-buy {
+            background: var(--accent); color: #fff; border: none; padding: 9px 10px;
+            border-radius: 9px; font-size: 12.5px; font-weight: 700; cursor: pointer;
+        }
+        .btn-buy:hover { background: var(--accent-hover); }
+        .btn-cart:disabled, .btn-buy:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        .recent-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+        .recent-card {
+            background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+            padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer;
+        }
+        .recent-card:hover { border-color: var(--ink); }
+        .recent-card img { width: 54px; height: 54px; border-radius: 10px; object-fit: cover; background: #f3f0ea; }
+
+        .reviews-shell { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px; }
+        .rating-summary-banner {
+            display: flex; justify-content: space-between; align-items: center; gap: 18px;
+            flex-wrap: wrap; background: #faf7f2; border: 1px solid var(--line);
+            border-radius: 16px; padding: 18px 22px; margin-bottom: 22px;
+        }
+        .rev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+        .rev-box {
+            background: #fcfbf8; border: 1px solid var(--line); border-radius: 14px; padding: 16px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .fit-pill {
+            display: inline-block; background: #eef6f0; color: var(--green);
+            font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+        }
+
+        .contact-wrap {
+            background: linear-gradient(145deg, #ffffff 0%, #fcfaf6 100%);
+            border: 1px solid var(--line); border-radius: 22px;
+            padding: 28px; display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 28px;
+        }
+        .store-badge-box { background: var(--ink); color: #fff; border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+        .c-tile { background: var(--surface); border: 1px solid var(--line); border-radius: 13px; padding: 14px 16px; margin-bottom: 11px; }
+        .c-tile small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+        .c-tile strong { font-size: 14px; }
+
+        .backdrop { position: fixed; inset: 0; background: rgba(20,22,25,0.55); display: none; z-index: 50; }
+        .backdrop.open { display: block; }
+        .drawer {
+            position: fixed; top: 0; right: -430px; width: 100%; max-width: 420px; height: 100vh;
+            background: var(--surface); z-index: 60; transition: right 0.28s ease;
+            display: flex; flex-direction: column;
+        }
+        .drawer.open { right: 0; }
+        .d-head { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+        .d-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+        .d-foot { padding: 16px 20px; border-top: 1px solid var(--line); background: #faf8f4; }
+        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--muted); }
+
+        .modal { position: fixed; inset: 0; background: rgba(20,22,25,0.62); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 70; }
+        .modal.open { display: flex; }
+        .modal-card {
+            background: var(--surface); border-radius: 18px; max-width: 600px; width: 100%;
+            padding: 24px; position: relative; max-height: 90vh; overflow-y: auto;
+        }
+
+        .f-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .fg { margin-bottom: 12px; }
+        .fg.full { grid-column: 1 / -1; }
+        .fg label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+        .fg input, .fg textarea, .fg select {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+            border-radius: 9px; font-size: 13.5px; outline: none; background: #fff;
+        }
+
+        table.size-tbl { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+        table.size-tbl th, table.size-tbl td { border: 1px solid var(--line); padding: 9px 12px; text-align: center; }
+        table.size-tbl th { background: #f5f2eb; font-weight: 700; }
+
+        .toast {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+            background: var(--ink); color: #fff; padding: 11px 22px; border-radius: 999px;
+            font-size: 13px; font-weight: 600; opacity: 0; transition: 0.25s ease; z-index: 95;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        footer { background: var(--ink); color: #9ca3af; margin-top: 64px; padding: 36px 20px; text-align: center; font-size: 13px; }
+        footer strong { color: #fff; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #receipt-modal, #receipt-modal * { visibility: visible; }
+            #receipt-modal { position: static; background: none; display: block; }
+            .no-print { display: none !important; }
+        }
+
+        @media (max-width: 880px) {
+            .hero-banner, .contact-wrap { grid-template-columns: 1fr; }
+            .hero-right { height: 250px; }
+            .trust-bar { grid-template-columns: 1fr 1fr; }
+            .nav-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="offer-bar">
+        Use Code <code>STRIDE10</code> (10% OFF) or <code>FIRST150</code> (₹150 OFF on ₹999+) • Free Delivery above <strong>₹599</strong>
+    </div>
+
+    <header>
+        <a href="/" class="brand">STRIDE<span class="brand-dot"></span></a>
+
+        <nav class="nav-menu">
+            <a href="#catalog">Footwear</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+            <a href="#" onclick="openModal('size-modal'); return false;">Size Guide</a>
+            <a href="#" onclick="openAccountModal(); return false;">My Orders</a>
+        </nav>
+
+        <div class="search-area" id="search-area">
+            <form class="search-form" method="GET" action="/">
+                {% if selected_category and selected_category != 'all' %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+                <input type="text" id="live-search-input" name="q" value="{{ search_query }}"
+                       placeholder="Search shoes, sneakers, chappal..." autocomplete="off"
+                       oninput="handleLiveSearch(this.value)" onfocus="handleLiveSearch(this.value)">
+                <button type="submit">Search</button>
+            </form>
+            <div class="live-dropdown" id="live-dropdown"></div>
+        </div>
+
+        <div class="nav-right">
+            <button type="button" class="pill-btn" onclick="openAccountModal()">
+                {% if profile_data %}{{ profile_data.full_name|truncatechars:14 }}{% else %}Account{% endif %}
+            </button>
+            <button type="button" class="pill-btn" onclick="openDrawer('wish-drawer')">
+                Wishlist <span class="badge-num" id="wish-count">0</span>
+            </button>
+            <button type="button" class="pill-btn pill-cart" onclick="openDrawer('cart-drawer')">
+                Cart <span class="badge-num" id="cart-count">0</span>
+            </button>
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="/admin/" class="pill-btn">Admin</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <section class="hero-wrap">
+        <div class="hero-banner">
+            <div class="hero-left">
+                <span class="hero-tag">STRIDE FOOTWEAR • DIRECT STORE</span>
+                <h1>Crafted for Comfort. Built to Last.</h1>
+                <p>Explore breathable running shoes, everyday sneakers, orthopedic daily chappals, rugged sandals, and office formals—with instant UPI checkout or Cash on Delivery.</p>
+                <div class="hero-btns">
+                    <a href="#catalog" class="btn-accent">Shop Collection</a>
+                    <button type="button" class="btn-outline-light" onclick="openModal('size-modal')">Check UK Size Chart</button>
+                </div>
+            </div>
+            <div class="hero-right">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=85" alt="Stride Footwear Hero">
+                <div class="hero-float">
+                    <div>
+                        <strong style="font-size:13.5px; display:block;">AeroMax Pro Series</strong>
+                        <span style="font-size:12px; color:#cbd5e1;">Starting at ₹299 • UK 6 to UK 10</span>
+                    </div>
+                    <a href="#catalog" class="btn-accent" style="padding:8px 15px; font-size:12.5px;">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust-bar">
+        <div class="trust-item"><strong>Memory-Foam Comfort</strong><span>All-day cushioning for work & travel</span></div>
+        <div class="trust-item"><strong>UPI, Cards & COD</strong><span>Pay online securely or on delivery</span></div>
+        <div class="trust-item"><strong>7-Day Size Exchange</strong><span>Hassle-free replacement on fit issues</span></div>
+        <div class="trust-item"><strong>Direct Store Support</strong><span>Call or WhatsApp for bulk & retail orders</span></div>
+    </section>
+
+    <section class="container" id="catalog">
+        <div class="head-row">
+            <div>
+                <h2 class="sec-title">Shop Footwear</h2>
+                <p class="sec-sub">Filter by category, budget, rating, or discount—and select your UK size.</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:13px; color:var(--muted);">{{ total_matching }} style(s)</span>
+                <select class="f-select" onchange="updateQueryParam('sort', this.value)">
+                    <option value="latest" {% if selected_sort == 'latest' %}selected{% endif %}>Sort: Featured</option>
+                    <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-panel">
+            <div class="filter-strip">
+                <div class="pills">
+                    <button type="button" class="cat-chip {% if selected_category == 'all' or not selected_category %}active{% endif %}"
+                            onclick="updateQueryParam('category', 'all')">All Footwear</button>
+                    {% for code, label in categories %}
+                        <button type="button" class="cat-chip {% if selected_category == code %}active{% endif %}"
+                                onclick="updateQueryParam('category', '{{ code }}')">{{ label }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="sub-filters">
+                <select class="f-select" onchange="updateQueryParam('price', this.value)">
+                    <option value="all" {% if selected_price == 'all' %}selected{% endif %}>Budget: All Prices</option>
+                    <option value="under_500" {% if selected_price == 'under_500' %}selected{% endif %}>Under ₹500</option>
+                    <option value="500_1500" {% if selected_price == '500_1500' %}selected{% endif %}>₹500 – ₹1500</option>
+                    <option value="1500_plus" {% if selected_price == '1500_plus' %}selected{% endif %}>₹1500 & Above</option>
+                </select>
+
+                <select class="f-select" onchange="updateQueryParam('rating', this.value)">
+                    <option value="0" {% if selected_rating == '0' %}selected{% endif %}>Rating: All Ratings</option>
+                    <option value="4" {% if selected_rating == '4' %}selected{% endif %}>4★ & Above</option>
+                </select>
+
+                <button type="button" class="cat-chip {% if discount_only %}active{% endif %}"
+                        onclick="updateQueryParam('discount', '{% if discount_only %}0{% else %}1{% endif %}')">
+                    Discounted Deals Only
+                </button>
+
+                <a href="/#catalog" style="font-size:12px; font-weight:700; color:var(--accent); text-decoration:none; margin-left:auto;">
+                    Reset Filters
+                </a>
+            </div>
+        </div>
+
+        <div class="grid">
+            {% for product in products %}
+            <div class="card">
+                <div class="thumb" onclick="openProductModal('{{ product.id }}')">
+                    {% if product.display_image %}
+                        <img src="{{ product.display_image }}" alt="{{ product.name }}">
+                    {% else %}
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;">Photo Coming Soon</div>
+                    {% endif %}
+                    <div class="tag-group">
+                        <span class="tag-cat">{{ product.get_category_display }}</span>
+                        {% if product.discount_percent > 0 %}
+                            <span class="tag-off">{{ product.discount_percent }}% OFF</span>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="fav-btn" id="wish-btn-{{ product.id }}"
+                            onclick="event.stopPropagation(); toggleWishlist('{{ product.id }}', '{{ product.name|escapejs }}', '{{ product.price }}')"
+                            title="Save to Wishlist">♥</button>
+                </div>
+
+                <div class="card-body">
+                    <div class="meta-top">
+                        <span class="brand-lbl">{{ product.brand_tag }}</span>
+                        <span class="rate-lbl"><span>★</span> {{ product.avg_rating }} ({{ product.review_count }})</span>
+                    </div>
+                    <div class="p-name" onclick="openProductModal('{{ product.id }}')">{{ product.name }}</div>
+                    <div class="p-desc">{{ product.description|default:"Lightweight cushioned sole built for all-day comfort."|truncatechars:76 }}</div>
+
+                    <div class="size-head">
+                        <span id="size-stock-lbl-{{ product.id }}">Select UK Size:</span>
+                        <button type="button" class="size-guide-link" onclick="openModal('size-modal')">Size Chart</button>
+                    </div>
+                    <div class="size-list" id="sizes-{{ product.id }}"></div>
+
+                    <div class="price-line">
+                        <div>
+                            <span class="price-now">₹{{ product.price }}</span>
+                            {% if product.original_price and product.original_price > product.price %}
+                                <span class="price-mrp">₹{{ product.original_price }}</span>
+                            {% endif %}
+                        </div>
+                        {% if product.stock > 0 %}
+                            <span class="{% if product.stock <= 4 %}stock-low{% else %}stock-ok{% endif %}">
+                                {% if product.stock <= 4 %}Only {{ product.stock }} left{% else %}In Stock{% endif %}
+                            </span>
+                        {% else %}
+                            <span class="stock-low">Sold Out</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="btn-row">
+                        <button type="button" class="btn-info" onclick="openProductModal('{{ product.id }}')">Reviews</button>
+                        <button type="button" class="btn-cart" id="add-btn-{{ product.id }}"
+                                onclick="addToCartWithSize('{{ product.id }}', '{{ product.name|escapejs }}', '{{ product.price }}')">
+                            + Cart
+                        </button>
+                        <button type="button" class="btn-buy" id="buy-btn-{{ product.id }}"
+                                onclick="buyNow('{{ product.id }}', '{{ product.name|escapejs }}', '{{ product.price }}')">
+                            Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align:center; padding:52px 20px; background:#fff; border-radius:16px; border:1px solid var(--line);">
+                <h3 style="margin-bottom:8px;">No matching footwear found</h3>
+                <p style="color:var(--muted); margin-bottom:16px;">Try changing price, rating, or category filters.</p>
+                <a href="/" class="btn-accent" style="display:inline-block;">Show All Footwear</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 or show_all %}
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:26px; padding-top:18px; border-top:1px solid var(--line);">
+            <span style="font-size:13px; color:var(--muted);">
+                Showing <strong>{{ products|length }}</strong> of <strong>{{ total_matching }}</strong> footwear items
+                {% if not show_all %}(Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}){% endif %}
+            </span>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                {% if not show_all and page_obj.has_previous %}
+                    <button type="button" class="cat-chip" onclick="updateQueryParam('page', '{{ page_obj.previous_page_number }}')">← Previous</button>
+                {% endif %}
+                {% if not show_all and page_obj.has_next %}
+                    <button type="button" class="cat-chip active" onclick="updateQueryParam('page', '{{ page_obj.next_page_number }}')">Next Page →</button>
+                {% endif %}
+                {% if not show_all and total_matching > 12 %}
+                    <button type="button" class="cat-chip" onclick="updateQueryParam('show_all', '1')">View All ({{ total_matching }})</button>
+                {% elif show_all %}
+                    <button type="button" class="cat-chip" onclick="updateQueryParam('show_all', '0')">Show 12 Per Page</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="container" id="recently-viewed-sec" style="display:none;">
+        <div class="head-row">
+            <div>
+                <h2 class="sec-title">Recently Viewed Footwear</h2>
+                <p class="sec-sub">Jump right back to styles you checked out earlier.</p>
+            </div>
+        </div>
+        <div class="recent-strip" id="recent-strip"></div>
+    </section>
+
+    <section class="container" id="reviews">
+        <div class="head-row">
+            <div>
+                <h2 class="sec-title">Verified Wearer Reviews</h2>
+                <p class="sec-sub">Real feedback on comfort, sole cushioning, and UK sizing—click "Reviews" on any shoe to post yours.</p>
+            </div>
+        </div>
+        <div class="reviews-shell">
+            <div class="rating-summary-banner">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <div style="font-size:36px; font-weight:900; line-height:1;">4.9</div>
+                    <div>
+                        <div style="color:var(--gold); font-size:16px; font-weight:800;">★★★★★</div>
+                        <div style="font-size:13px; color:var(--muted); font-weight:600;">Rated by STRIDE Footwear Customers • 96% Recommend Fit</div>
+                    </div>
+                </div>
+                <a href="#catalog" class="btn-accent" style="padding:10px 18px; font-size:13px;">Write a Product Review</a>
+            </div>
+            <div class="rev-grid">
+                {% for rev in recent_reviews %}
+                <div class="rev-box">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+                            <span class="fit-pill">{{ rev.fit_feedback }}</span>
+                            <span style="color:var(--gold); font-size:13.5px;">
+                                {% for _ in "12345" %}{% if forloop.counter <= rev.rating %}★{% else %}☆{% endif %}{% endfor %}
+                            </span>
+                        </div>
+                        <p style="font-size:13.5px; color:var(--ink); margin-bottom:12px;">"{{ rev.comment }}"</p>
+                    </div>
+                    <div style="font-size:12px; color:var(--muted); font-weight:700; border-top:1px solid #f0ece3; padding-top:10px;">
+                        {{ rev.reviewer_name }} • <span style="color:var(--accent);">{{ rev.product.name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="container" id="contact">
+        <div class="head-row">
+            <div>
+                <h2 class="sec-title">Visit or Message STRIDE Desk</h2>
+                <p class="sec-sub">Personal sizing guidance, 7-day size swaps, retail store visits, and wholesale/bulk footwear supply.</p>
+            </div>
+        </div>
+        <div class="contact-wrap">
+            <div>
+                <div class="store-badge-box">
+                    <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.6px; color:#fdba74; font-weight:800;">Flagship Retail & Dispatch Hub</div>
+                    <div style="font-size:18px; font-weight:800; margin-top:4px;">STRIDE Footwear Studio</div>
+                    <p style="font-size:13px; color:#d1d5db; margin-top:4px;">Walk-in size trials, instant exchange desk, and bulk dealer dispatch.</p>
+                </div>
+                <div class="c-tile"><small>Showroom Location</small><strong>42, Main Footwear Bazaar, Civil Lines, Your City</strong></div>
+                <div class="c-tile"><small>Direct Helpline & WhatsApp</small><strong>+91 98765 43210 • care@stridefootwear.in</strong></div>
+                <div class="c-tile"><small>Store & Support Hours</small><strong>Monday – Sunday • 9:30 AM to 9:30 PM IST</strong></div>
+                <a href="https://wa.me/919876543210?text=Hello%20STRIDE%20Footwear,%20I%20need%20help%20with%20a%20footwear%20order."
+                   target="_blank" class="btn-accent" style="display:block; width:100%; text-align:center; background:#15803d;">
+                    Chat on WhatsApp Now
+                </a>
+            </div>
+            <form id="contact-form" onsubmit="submitContact(event)">
+                <h3 style="margin-bottom:4px; font-size:18px;">Send an Inquiry</h3>
+                <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">We reply to sizing, exchange, and bulk order requests promptly.</p>
+                <div class="f-grid">
+                    <div class="fg"><label>Your Name *</label><input type="text" id="c-name" required placeholder="Full name"></div>
+                    <div class="fg"><label>Phone / WhatsApp *</label><input type="tel" id="c-phone" required placeholder="10-digit number"></div>
+                    <div class="fg"><label>Email (Optional)</label><input type="email" id="c-email" placeholder="you@example.com"></div>
+                    <div class="fg">
+                        <label>How can we help?</label>
+                        <select id="c-subject">
+                            <option value="UK Size & Fit Recommendation">UK Size & Fit Recommendation</option>
+                            <option value="7-Day Size Exchange Request">7-Day Size Exchange Request</option>
+                            <option value="Bulk / Shop Wholesale Supply">Bulk / Shop Wholesale Supply</option>
+                            <option value="Order & Delivery Status">Order & Delivery Status</option>
+                        </select>
+                    </div>
+                    <div class="fg full"><label>Message *</label><textarea id="c-message" rows="3" required placeholder="Mention shoe model, UK size, or your question..."></textarea></div>
+                </div>
+                <button type="submit" id="contact-btn" class="btn-accent" style="width:100%;">Submit Message</button>
+            </form>
+        </div>
+    </section>
+
+    <div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+
+    <aside class="drawer" id="cart-drawer">
+        <div class="d-head">
+            <h3>Shopping Cart</h3>
+            <button type="button" class="close-btn" onclick="closeAll()">&times;</button>
+        </div>
+        <div class="d-body" id="cart-body"></div>
+        <div class="d-foot">
+            <div style="display:flex; gap:6px; margin-bottom:12px;">
+                <input type="text" id="coupon-input" placeholder="Code: STRIDE10 or FIRST150"
+                       style="flex:1; padding:8px 11px; border:1px solid var(--line); border-radius:8px; font-size:12.5px;">
+                <button type="button" class="btn-cart" style="padding:8px 13px;" onclick="applyCoupon()">Apply</button>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:4px;">
+                <span>Subtotal</span><span id="c-sub">₹0.00</span>
+            </div>
+            <div id="disc-row" style="display:none; justify-content:space-between; font-size:13px; color:var(--green); font-weight:700; margin-bottom:4px;">
+                <span>Coupon Discount</span><span id="c-disc">-₹0.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:8px;">
+                <span>Shipping (Free ≥ ₹599)</span><span id="c-ship">₹0.00</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900; margin-bottom:12px;">
+                <span>Total</span><span id="c-tot">₹0.00</span>
+            </div>
+            <button type="button" id="checkout-proceed-btn" class="btn-accent" style="width:100%;" onclick="openCheckout()">
+                Proceed to Checkout
+            </button>
+        </div>
+    </aside>
+
+    <aside class="drawer" id="wish-drawer">
+        <div class="d-head">
+            <h3>Saved Wishlist</h3>
+            <button type="button" class="close-btn" onclick="closeAll()">&times;</button>
+        </div>
+        <div class="d-body" id="wish-body"></div>
+    </aside>
+
+    <div class="modal" id="product-modal">
+        <div class="modal-card">
+            <button type="button" class="close-btn" style="position:absolute; top:14px; right:18px;" onclick="closeAll()">&times;</button>
+            <div id="product-modal-body"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="size-modal">
+        <div class="modal-card">
+            <button type="button" class="close-btn" style="position:absolute; top:14px; right:18px;" onclick="closeAll()">&times;</button>
+            <h3>Footwear Size Chart (India / UK)</h3>
+            <p style="font-size:13px; color:var(--muted); margin-top:4px;">Measure from heel back to longest toe tip.</p>
+            <table class="size-tbl">
+                <thead><tr><th>UK / IND Size</th><th>EU Size</th><th>US Size</th><th>Foot Length (cm)</th></tr></thead>
+                <tbody>
+                    <tr><td>UK 6</td><td>40</td><td>7</td><td>24.6 cm</td></tr>
+                    <tr><td>UK 7</td><td>41</td><td>8</td><td>25.4 cm</td></tr>
+                    <tr><td>UK 8</td><td>42</td><td>9</td><td>26.2 cm</td></tr>
+                    <tr><td>UK 9</td><td>43</td><td>10</td><td>27.1 cm</td></tr>
+                    <tr><td>UK 10</td><td>44</td><td>11</td><td>27.9 cm</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal" id="checkout-modal">
+        <div class="modal-card">
+            <button type="button" class="close-btn" style="position:absolute; top:14px; right:18px;" onclick="closeAll()">&times;</button>
+            <h3 style="margin-bottom:4px;">Delivery & Payment</h3>
+            <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+                Final Payable: <strong id="co-total" style="color:var(--accent);">₹0.00</strong>
+            </p>
+            <form onsubmit="submitOrder(event)">
+                <div class="f-grid">
+                    <div class="fg"><label>Full Name *</label><input type="text" id="o-name" required placeholder="Customer full name"></div>
+                    <div class="fg"><label>Mobile Number *</label><input type="tel" id="o-phone" required placeholder="10-digit mobile"></div>
+                    <div class="fg full"><label>Email (Optional)</label><input type="email" id="o-email" placeholder="you@example.com"></div>
+                    <div class="fg full"><label>Full Delivery Address *</label><textarea id="o-addr" rows="2" required placeholder="House/Flat No, Street, Landmark"></textarea></div>
+                    <div class="fg"><label>City *</label><input type="text" id="o-city" required placeholder="City"></div>
+                    <div class="fg"><label>Pincode *</label><input type="text" id="o-pin" required placeholder="Pincode"></div>
+                    <div class="fg full">
+                        <label>Payment Option *</label>
+                        <select id="o-pay">
+                            <option value="COD">Cash on Delivery (Pay when delivered)</option>
+                            <option value="ONLINE">Pay Online (UPI / Debit & Credit Card / NetBanking)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" id="o-btn" class="btn-accent" style="width:100%; margin-top:6px;">Confirm & Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="receipt-modal">
+        <div class="modal-card" id="receipt-body"></div>
+    </div>
+
+    <div class="modal" id="account-modal">
+        <div class="modal-card">
+            <button type="button" class="close-btn" style="position:absolute; top:14px; right:18px;" onclick="closeAll()">&times;</button>
+            <div id="account-modal-body"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <footer>
+        <strong>STRIDE FOOTWEAR</strong> • Shoes, Sneakers, Sandals & Chappal Store • Free Delivery above ₹599 • 7-Day Easy Size Exchange
+    </footer>
+
+    <script id="products-data" type="application/json">
+        [
+            {% for product in products %}
+            {
+                "id": "{{ product.id }}",
+                "name": "{{ product.name|escapejs }}",
+                "brand": "{{ product.brand_tag|escapejs }}",
+                "category": "{{ product.get_category_display|escapejs }}",
+                "price": "{{ product.price }}",
+                "original_price": "{{ product.original_price|default:'' }}",
+                "sizes": "{{ product.sizes|escapejs }}",
+                "size_stock": {{ product.size_stock_json|default:"{}"|safe }},
+                "stock": {{ product.stock }},
+                "avg_rating": "{{ product.avg_rating }}",
+                "review_count": {{ product.review_count }},
+                "description": "{{ product.description|default:'Comfortable sole, breathable upper, built for everyday wear.'|escapejs }}",
+                "image": "{{ product.display_image|escapejs }}",
+                "reviews": [
+                    {% for r in product.reviews.all %}
+                    {
+                        "name": "{{ r.reviewer_name|escapejs }}",
+                        "fit": "{{ r.fit_feedback|escapejs }}",
+                        "rating": {{ r.rating }},
+                        "comment": "{{ r.comment|escapejs }}"
+                    }{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ]
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
+    </script>
+
+    <script id="profile-json" type="application/json">
+        {% if profile_data %}{{ profile_data|safe }}{% else %}null{% endif %}
+    </script>
+
+    <script>
+        const PRODUCTS = JSON.parse(document.getElementById('products-data').textContent || '[]');
+        const PROFILE = JSON.parse(document.getElementById('profile-json').textContent || 'null');
+        const RAZORPAY_KEY_ID = "{{ razorpay_key_id }}";
+        const selectedSizeMap = {};
+        let activeCoupon = '';
+        let searchTimer = null;
+
+        function getCookie(name) {
+            if (!document.cookie) return null;
+            for (let c of document.cookie.split(';')) {
+                c = c.trim();
+                if (c.startsWith(name + '=')) return decodeURIComponent(c.slice(name.length + 1));
+            }
+            return null;
+        }
+
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        function updateQueryParam(key, val) {
+            const u = new URL(window.location.href);
+            if (val === 'all' || val === '0' || val === '') u.searchParams.delete(key);
+            else u.searchParams.set(key, val);
+            if (key !== 'page') u.searchParams.delete('page');
+            u.hash = 'catalog';
+            window.location.href = u.toString();
+        }
+
+        function handleLiveSearch(val) {
+            clearTimeout(searchTimer);
+            const q = val.trim();
+            const dd = document.getElementById('live-dropdown');
+            if (!q) { dd.classList.remove('open'); return; }
+            searchTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`/api/live-search/?q=${encodeURIComponent(q)}`);
+                    const data = await res.json();
+                    if (!data.results || !data.results.length) {
+                        dd.innerHTML = `<div style="padding:12px 14px; font-size:12.5px; color:var(--muted);">No matches for "<strong>${q}</strong>". Press Enter to search all.</div>`;
+                        dd.classList.add('open');
+                        return;
+                    }
+                    dd.innerHTML = data.results.map(item => `
+                        <div class="live-item" onclick="selectLiveProduct('${item.id}')">
+                            ${item.image ? `<img src="${item.image}" alt="${item.name}">` : `<div style="width:44px;height:44px;border-radius:8px;background:#f1f5f9;"></div>`}
+                            <div style="flex:1; min-width:0;">
+                                <div style="font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</div>
+                                <div style="font-size:11px; color:var(--muted);">${item.brand} • ${item.category}</div>
+                            </div>
+                            <div style="font-size:13px; font-weight:800; color:var(--accent);">₹${item.price}</div>
+                        </div>
+                    `).join('') + `
+                        <a href="/?q=${encodeURIComponent(q)}#catalog"
+                           style="display:block; text-align:center; padding:9px; font-size:12px; font-weight:700; color:var(--accent); background:#faf7f2; text-decoration:none;">
+                            See all matching footwear →
+                        </a>
+                    `;
+                    dd.classList.add('open');
+                } catch (e) { dd.classList.remove('open'); }
+            }, 150);
+        }
+
+        function selectLiveProduct(id) {
+            document.getElementById('live-dropdown').classList.remove('open');
+            const p = PRODUCTS.find(x => x.id === String(id));
+            if (p) openProductModal(id);
+            else {
+                const q = document.getElementById('live-search-input').value.trim();
+                window.location.href = `/?q=${encodeURIComponent(q)}#catalog`;
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const area = document.getElementById('search-area');
+            if (area && !area.contains(e.target)) document.getElementById('live-dropdown').classList.remove('open');
+        });
+
+        function getSizeStock(p, sz) {
+            if (p.size_stock && Object.prototype.hasOwnProperty.call(p.size_stock, sz)) {
+                return Number(p.size_stock[sz]);
+            }
+            return Number(p.stock);
+        }
+
+        function syncSizeUI(p) {
+            const activeSz = selectedSizeMap[p.id];
+            const avail = getSizeStock(p, activeSz);
+            const lbl = document.getElementById(`size-stock-lbl-${p.id}`);
+            const addBtn = document.getElementById(`add-btn-${p.id}`);
+            const buyBtn = document.getElementById(`buy-btn-${p.id}`);
+
+            if (lbl) {
+                lbl.textContent = activeSz
+                    ? `${activeSz}: ${avail > 0 ? avail + ' left' : 'Sold out'}`
+                    : 'No size stock';
+            }
+            const soldOut = !activeSz || avail <= 0;
+            if (addBtn) { addBtn.disabled = soldOut; addBtn.textContent = soldOut ? 'Sold Out' : '+ Cart'; }
+            if (buyBtn) { buyBtn.disabled = soldOut; }
+        }
+
+        function initSizes() {
+            PRODUCTS.forEach(p => {
+                const list = (p.sizes || 'UK 6, UK 7, UK 8, UK 9, UK 10').split(',').map(s => s.trim()).filter(Boolean);
+                const firstAvail = list.find(sz => getSizeStock(p, sz) > 0) || list[0] || 'UK 8';
+                selectedSizeMap[p.id] = firstAvail;
+
+                const row = document.getElementById(`sizes-${p.id}`);
+                if (!row) return;
+                row.innerHTML = list.map(sz => {
+                    const cnt = getSizeStock(p, sz);
+                    const isSold = cnt <= 0;
+                    const isAct = !isSold && sz === firstAvail;
+                    return `<button type="button" class="sz-btn ${isSold ? 'sold' : (isAct ? 'active' : '')}"
+                                    ${isSold ? 'disabled' : ''}
+                                    onclick="pickSize('${p.id}', '${sz}', this)">${sz}</button>`;
+                }).join('');
+                syncSizeUI(p);
+            });
+        }
+
+        function pickSize(pid, sz, btn) {
+            const p = PRODUCTS.find(x => x.id === String(pid));
+            if (!p || getSizeStock(p, sz) <= 0) return;
+            selectedSizeMap[pid] = sz;
+            const row = document.getElementById(`sizes-${pid}`);
+            if (row) row.querySelectorAll('.sz-btn:not(.sold)').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            syncSizeUI(p);
+        }
+
+        function recordRecentView(id) {
+            let arr = JSON.parse(localStorage.getItem('stride_recent') || '[]').filter(x => x !== String(id));
+            arr.unshift(String(id));
+            arr = arr.slice(0, 4);
+            localStorage.setItem('stride_recent', JSON.stringify(arr));
+            renderRecent();
+        }
+
+        function renderRecent() {
+            const ids = JSON.parse(localStorage.getItem('stride_recent') || '[]');
+            const items = ids.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+            const sec = document.getElementById('recently-viewed-sec');
+            const strip = document.getElementById('recent-strip');
+            if (!items.length) { sec.style.display = 'none'; return; }
+            sec.style.display = 'block';
+            strip.innerHTML = items.map(p => `
+                <div class="recent-card" onclick="openProductModal('${p.id}')">
+                    ${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div style="width:54px;height:54px;border-radius:10px;background:#f3f0ea;"></div>`}
+                    <div style="min-width:0;">
+                        <div style="font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
+                        <div style="font-size:12.5px; font-weight:800; color:var(--accent);">₹${p.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCart() { return JSON.parse(localStorage.getItem('stride_cart') || '[]'); }
+        function saveCart(c) { localStorage.setItem('stride_cart', JSON.stringify(c)); renderCart(); }
+
+        function addToCartWithSize(id, name, price) {
+            const p = PRODUCTS.find(x => x.id === String(id));
+            const size = selectedSizeMap[String(id)] || 'UK 8';
+            const avail = p ? getSizeStock(p, size) : 10;
+            if (avail <= 0) return toast(`${size} is sold out`);
+
+            const cart = getCart();
+            const found = cart.find(i => i.id === String(id) && i.size === size);
+            const nextQty = (found ? found.qty : 0) + 1;
+            if (nextQty > avail) return toast(`Only ${avail} pair(s) in ${size}`);
+
+            if (found) found.qty = nextQty;
+            else cart.push({ id: String(id), name, size, price: parseFloat(price), qty: 1 });
+            saveCart(cart);
+            toast(`${name} (${size}) added to cart`);
+        }
+
+        function buyNow(id, name, price) {
+            addToCartWithSize(id, name, price);
+            openCheckout();
+        }
+
+        function changeQty(idx, delta) {
+            const cart = getCart();
+            if (!cart[idx]) return;
+            cart[idx].qty += delta;
+            if (cart[idx].qty <= 0) cart.splice(idx, 1);
+            saveCart(cart);
+        }
+
+        function clearCart() {
+            activeCoupon = '';
+            const inp = document.getElementById('coupon-input');
+            if (inp) inp.value = '';
+            saveCart([]);
+            toast('Cart cleared');
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+            if (code === 'STRIDE10' || code === 'FIRST150') {
+                activeCoupon = code;
+                toast(`Coupon ${code} applied!`);
+            } else {
+                activeCoupon = '';
+                toast('Use STRIDE10 or FIRST150');
+            }
+            renderCart();
+        }
+
+        function calcTotals(cart) {
+            const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            let disc = 0;
+            if (activeCoupon === 'STRIDE10') disc = +(sub * 0.10).toFixed(2);
+            else if (activeCoupon === 'FIRST150' && sub >= 999) disc = 150;
+            const afterDisc = Math.max(0, sub - disc);
+            const ship = afterDisc === 0 ? 0 : (afterDisc >= 599 ? 0 : 59);
+            return { sub, disc, ship, total: afterDisc + ship };
+        }
+
+        function renderCart() {
+            const cart = getCart();
+            const { sub, disc, ship, total } = calcTotals(cart);
+            document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('c-sub').textContent = `₹${sub.toFixed(2)}`;
+
+            const discRow = document.getElementById('disc-row');
+            if (disc > 0) {
+                discRow.style.display = 'flex';
+                document.getElementById('c-disc').textContent = `-₹${disc.toFixed(2)}`;
+            } else discRow.style.display = 'none';
+
+            const shipEl = document.getElementById('c-ship');
+            shipEl.textContent = sub === 0 ? '₹0.00' : (ship === 0 ? 'FREE' : `₹${ship.toFixed(2)}`);
+            document.getElementById('c-tot').textContent = `₹${total.toFixed(2)}`;
+
+            const proceedBtn = document.getElementById('checkout-proceed-btn');
+            if (proceedBtn) {
+                proceedBtn.disabled = cart.length === 0;
+                proceedBtn.style.opacity = cart.length === 0 ? '0.55' : '1';
+            }
+
+            const body = document.getElementById('cart-body');
+            if (!cart.length) {
+                body.innerHTML = `<div style="text-align:center; color:var(--muted); padding:40px 10px;">
+                    <p style="margin-bottom:14px;">Your cart is empty.</p>
+                    <a href="#catalog" onclick="closeAll()" class="btn-cart" style="display:inline-block; text-decoration:none; padding:9px 16px;">Browse Footwear</a>
+                </div>`;
+                return;
+            }
+            body.innerHTML = `
+                <div style="display:flex; justify-content:flex-end; margin-bottom:6px;">
+                    <button type="button" onclick="clearCart()" style="background:none; border:none; color:var(--red); font-size:12px; font-weight:700; cursor:pointer;">Clear Cart</button>
+                </div>
+            ` + cart.map((item, i) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--line);">
+                    <div>
+                        <div style="font-weight:700; font-size:14px;">${item.name}</div>
+                        <div style="font-size:12px; color:var(--muted);">Size: <strong>${item.size}</strong> • ₹${item.price.toFixed(2)}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <button type="button" class="btn-info" style="padding:4px 9px;" onclick="changeQty(${i}, -1)">-</button>
+                        <span style="font-weight:700; font-size:13px;">${item.qty}</span>
+                        <button type="button" class="btn-info" style="padding:4px 9px;" onclick="changeQty(${i}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getWish() { return JSON.parse(localStorage.getItem('stride_wish') || '[]'); }
+        function toggleWishlist(id, name, price) {
+            let w = getWish();
+            if (w.some(i => i.id === String(id))) { w = w.filter(i => i.id !== String(id)); toast('Removed from wishlist'); }
+            else { w.push({ id: String(id), name, price: parseFloat(price) }); toast('Saved to wishlist'); }
+            localStorage.setItem('stride_wish', JSON.stringify(w));
+            renderWish();
+        }
+        function renderWish() {
+            const w = getWish();
+            document.getElementById('wish-count').textContent = w.length;
+            document.querySelectorAll('.fav-btn').forEach(b => b.classList.remove('active'));
+            w.forEach(i => { const b = document.getElementById(`wish-btn-${i.id}`); if (b) b.classList.add('active'); });
+            const body = document.getElementById('wish-body');
+            if (!w.length) { body.innerHTML = `<p style="text-align:center; color:var(--muted); padding:34px 0;">Your wishlist is empty.</p>`; return; }
+            body.innerHTML = w.map(i => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--line);">
+                    <div>
+                        <div style="font-weight:700; font-size:14px;">${i.name}</div>
+                        <div style="font-size:12.5px; font-weight:700; color:var(--accent);">₹${i.price.toFixed(2)}</div>
+                    </div>
+                    <button type="button" class="btn-buy" style="padding:7px 12px;"
+                            onclick="addToCartWithSize('${i.id}', '${i.name.replace(/'/g, "\\'")}', '${i.price}')">+ Cart</button>
+                </div>
+            `).join('');
+        }
+
+        function closeAll() {
+            document.querySelectorAll('.drawer, .modal').forEach(el => el.classList.remove('open'));
+            document.getElementById('backdrop').classList.remove('open');
+        }
+        function openDrawer(id) { closeAll(); document.getElementById(id).classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function openModal(id) { closeAll(); document.getElementById(id).classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+
+        function openProductModal(id) {
+            const p = PRODUCTS.find(x => x.id === String(id));
+            if (!p) return;
+            recordRecentView(id);
+
+            const revHtml = p.reviews.length
+                ? p.reviews.map(r => `
+                    <div style="background:#faf8f4; border:1px solid var(--line); padding:10px 12px; border-radius:10px; margin-bottom:8px;">
+                        <div style="font-size:12.5px; font-weight:700;">${r.name} • <span style="color:var(--green);">${r.fit || 'True to Size'}</span> • <span style="color:var(--gold);">${'★'.repeat(r.rating)}</span></div>
+                        <div style="font-size:13px; color:var(--muted); margin-top:2px;">${r.comment}</div>
+                    </div>
+                  `).join('')
+                : `<p style="font-size:13px; color:var(--muted); margin-bottom:10px;">No reviews yet. Be the first to review!</p>`;
+
+            document.getElementById('product-modal-body').innerHTML = `
+                ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%; height:235px; object-fit:cover; border-radius:12px; margin-bottom:14px;">` : ''}
+                <div style="font-size:12px; font-weight:800; color:var(--accent);">${p.brand} • ${p.category} • ★ ${p.avg_rating} (${p.review_count})</div>
+                <h2 style="margin:4px 0 8px;">${p.name}</h2>
+                <div style="margin-bottom:10px;">
+                    <span style="font-size:22px; font-weight:900;">₹${p.price}</span>
+                    ${p.original_price ? `<span class="price-mrp">₹${p.original_price}</span>` : ''}
+                </div>
+                <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">${p.description}</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px;">
+                    <button type="button" class="btn-cart" style="padding:12px;"
+                            onclick="addToCartWithSize('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.price}'); closeAll();">Add to Cart</button>
+                    <button type="button" class="btn-buy" style="padding:12px;"
+                            onclick="buyNow('${p.id}', '${p.name.replace(/'/g, "\\'")}', '${p.price}')">Buy Now</button>
+                </div>
+                <h4 style="margin-bottom:10px;">Customer Reviews</h4>
+                ${revHtml}
+                <form onsubmit="submitReview(event, '${p.id}')" style="margin-top:14px; border-top:1px solid var(--line); padding-top:14px;">
+                    <div style="font-size:13px; font-weight:700; margin-bottom:8px;">Write a Review</div>
+                    <div class="f-grid">
+                        <div class="fg"><input type="text" id="rev-name" required placeholder="Your name"></div>
+                        <div class="fg">
+                            <select id="rev-rating">
+                                <option value="5">5 ★ — Excellent</option>
+                                <option value="4">4 ★ — Good</option>
+                                <option value="3">3 ★ — Average</option>
+                                <option value="2">2 ★ — Fair</option>
+                                <option value="1">1 ★ — Poor</option>
+                            </select>
+                        </div>
+                        <div class="fg full">
+                            <select id="rev-fit">
+                                <option value="True to Size">Fit: True to Size</option>
+                                <option value="Slightly Snug">Fit: Slightly Snug</option>
+                                <option value="Relaxed / Roomy">Fit: Relaxed / Roomy</option>
+                            </select>
+                        </div>
+                        <div class="fg full"><textarea id="rev-comment" rows="2" required placeholder="Share fit, comfort & quality feedback..."></textarea></div>
+                    </div>
+                    <button type="submit" class="btn-cart" style="width:100%; padding:11px;">Submit Review</button>
+                </form>
+            `;
+            openModal('product-modal');
+        }
+
+        async function submitReview(e, productId) {
+            e.preventDefault();
+            const res = await fetch('/api/add-review/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({
+                    product_id: productId,
+                    reviewer_name: document.getElementById('rev-name').value,
+                    fit_feedback: document.getElementById('rev-fit').value,
+                    rating: document.getElementById('rev-rating').value,
+                    comment: document.getElementById('rev-comment').value,
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) return alert(data.error || 'Could not submit review.');
+            toast('Review published!');
+            window.location.reload();
+        }
+
+        async function submitContact(e) {
+            e.preventDefault();
+            const btn = document.getElementById('contact-btn');
+            btn.disabled = true; btn.textContent = 'Sending...';
+            try {
+                const res = await fetch('/api/contact/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                    body: JSON.stringify({
+                        name: document.getElementById('c-name').value,
+                        phone: document.getElementById('c-phone').value,
+                        email: document.getElementById('c-email').value,
+                        subject: document.getElementById('c-subject').value,
+                        message: document.getElementById('c-message').value,
+                    }),
+                });
+                const data = await res.json();
+                if (!res.ok) return alert(data.error || 'Failed to send message.');
+                document.getElementById('contact-form').reset();
+                toast(data.message);
+            } finally { btn.disabled = false; btn.textContent = 'Submit Message'; }
+        }
+
+        function openCheckout() {
+            const cart = getCart();
+            if (!cart.length) return toast('Your cart is empty');
+            const { total } = calcTotals(cart);
+            document.getElementById('co-total').textContent = `₹${total.toFixed(2)}`;
+            if (PROFILE) {
+                if (PROFILE.full_name) document.getElementById('o-name').value = PROFILE.full_name;
+                if (PROFILE.phone) document.getElementById('o-phone').value = PROFILE.phone;
+                if (PROFILE.email) document.getElementById('o-email').value = PROFILE.email;
+                if (PROFILE.address) document.getElementById('o-addr').value = PROFILE.address;
+                if (PROFILE.city) document.getElementById('o-city').value = PROFILE.city;
+                if (PROFILE.pincode) document.getElementById('o-pin').value = PROFILE.pincode;
+            }
+            openModal('checkout-modal');
+        }
+
+        function showReceiptModal(r, paidOnline) {
+            const itemsText = Array.isArray(r.items)
+                ? r.items.map(x => typeof x === 'string' ? x : `${x.name} (${x.size}) x${x.qty}`).join(', ')
+                : '';
+            document.getElementById('receipt-body').innerHTML = `
+                <button type="button" class="close-btn no-print" style="position:absolute; top:14px; right:18px;" onclick="closeAll()">&times;</button>
+                <div style="text-align:center; padding:8px 0;">
+                    <div style="width:50px; height:50px; border-radius:50%; background:#dcfce7; color:#15803d; font-size:25px; font-weight:900; display:inline-flex; align-items:center; justify-content:center; margin-bottom:8px;">✓</div>
+                    <h2>STRIDE Order Invoice</h2>
+                    <p style="font-size:12.5px; color:var(--muted);">Order #${r.order_id} • ${r.date || 'Just now'} • ${r.payment_method || (paidOnline ? 'Online Paid' : 'COD')}</p>
+                </div>
+                <div style="background:#faf8f4; border:1px solid var(--line); border-radius:12px; padding:14px; margin:12px 0; font-size:13px;">
+                    <p><strong>Customer:</strong> ${r.customer_name} (${r.phone})</p>
+                    <p style="margin:4px 0;"><strong>Deliver to:</strong> ${r.address}</p>
+                    <p style="margin:4px 0;"><strong>Footwear Items:</strong> ${itemsText}</p>
+                    ${Number(r.discount || 0) > 0 ? `<p style="color:var(--green); font-weight:700;">Coupon Saved: ₹${r.discount}</p>` : ''}
+                    <p style="margin-top:8px; font-size:16px; font-weight:900; color:var(--green);">Total Amount: ₹${r.total_amount}</p>
+                </div>
+                <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                    <button type="button" class="btn-cart" style="padding:11px;" onclick="window.print()">Print / Save PDF</button>
+                    <button type="button" class="btn-accent" style="padding:11px;" onclick="window.location.reload()">Done</button>
+                </div>
+            `;
+            openModal('receipt-modal');
+        }
+
+        async function submitOrder(e) {
+            e.preventDefault();
+            const cart = getCart();
+            if (!cart.length) return;
+            const btn = document.getElementById('o-btn');
+            btn.disabled = true; btn.textContent = 'Processing...';
+            try {
+                const payload = {
+                    items: cart,
+                    coupon_code: activeCoupon,
+                    customer_name: document.getElementById('o-name').value,
+                    phone: document.getElementById('o-phone').value,
+                    email: document.getElementById('o-email').value,
+                    address: document.getElementById('o-addr').value,
+                    city: document.getElementById('o-city').value,
+                    pincode: document.getElementById('o-pin').value,
+                    payment_method: document.getElementById('o-pay').value,
+                };
+                const res = await fetch('/api/create-order/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json();
+                if (!res.ok) return alert(data.error || 'Could not place order.');
+
+                if (payload.payment_method === 'ONLINE') {
+                    const rzp = new Razorpay({
+                        key: RAZORPAY_KEY_ID,
+                        amount: data.amount,
+                        currency: data.currency,
+                        name: 'STRIDE FOOTWEAR',
+                        description: `Order #${data.order_id}`,
+                        order_id: data.razorpay_order_id,
+                        handler: async function (response) {
+                            const vr = await fetch('/api/verify-payment/', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                                body: JSON.stringify({
+                                    order_id: data.order_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                }),
+                            });
+                            if (vr.ok) { saveCart([]); showReceiptModal(data.receipt, true); }
+                            else alert('Payment verification failed.');
+                        },
+                        prefill: { name: payload.customer_name, email: payload.email, contact: payload.phone },
+                        theme: { color: '#d94e1f' },
+                    });
+                    rzp.open();
+                } else {
+                    saveCart([]);
+                    showReceiptModal(data.receipt, false);
+                }
+            } catch (err) { alert('Network error while placing order.'); }
+            finally { btn.disabled = false; btn.textContent = 'Confirm & Place Order'; }
+        }
+
+        function openAccountModal() {
+            const body = document.getElementById('account-modal-body');
+            if (!PROFILE) {
+                body.innerHTML = `
+                    <h3 style="margin-bottom:4px;">Customer Account & Order Lookup</h3>
+                    <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Login to save your address & view order history, or look up any order by phone.</p>
+
+                    <form onsubmit="submitLogin(event)" style="background:#faf8f4; border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px;">
+                        <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Sign In</div>
+                        <div class="f-grid">
+                            <div class="fg"><input type="email" id="l-email" required placeholder="Email address"></div>
+                            <div class="fg"><input type="password" id="l-pass" required placeholder="Password"></div>
+                        </div>
+                        <button type="submit" class="btn-cart" style="width:100%; padding:9px;">Login</button>
+                    </form>
+
+                    <form onsubmit="submitRegister(event)" style="background:#faf8f4; border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:14px;">
+                        <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Create New Account</div>
+                        <div class="f-grid">
+                            <div class="fg"><input type="text" id="r-name" required placeholder="Full name"></div>
+                            <div class="fg"><input type="tel" id="r-phone" required placeholder="Mobile number"></div>
+                            <div class="fg"><input type="email" id="r-email" required placeholder="Email address"></div>
+                            <div class="fg"><input type="password" id="r-pass" required minlength="6" placeholder="Password (min 6 chars)"></div>
+                        </div>
+                        <button type="submit" class="btn-accent" style="width:100%; padding:9px;">Create Account</button>
+                    </form>
+
+                    <div style="border-top:1px solid var(--line); padding-top:12px;">
+                        <div style="font-size:13px; font-weight:800; margin-bottom:6px;">Order Lookup by Mobile</div>
+                        <div style="display:flex; gap:8px; margin-bottom:10px;">
+                            <input type="tel" id="lookup-phone" placeholder="Enter mobile number" style="flex:1; padding:9px; border:1px solid var(--line); border-radius:8px;">
+                            <button type="button" class="btn-cart" style="padding:9px 14px;" onclick="loadOrders(document.getElementById('lookup-phone').value.trim())">Find Orders</button>
+                        </div>
+                        <div id="orders-list-box"></div>
+                    </div>
+                `;
+                openModal('account-modal');
+                return;
+            }
+
+            body.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div>
+                        <h3>${PROFILE.full_name}</h3>
+                        <p style="font-size:12px; color:var(--muted);">${PROFILE.email}</p>
+                    </div>
+                    <button type="button" class="btn-info" onclick="doLogout()">Logout</button>
+                </div>
+
+                <form onsubmit="saveCustomerProfile(event)" style="background:#faf8f4; border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:16px;">
+                    <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Saved Delivery Address</div>
+                    <div class="f-grid">
+                        <div class="fg"><input type="text" id="p-name" value="${PROFILE.full_name}" required placeholder="Full Name"></div>
+                        <div class="fg"><input type="tel" id="p-phone" value="${PROFILE.phone}" placeholder="Mobile"></div>
+                        <div class="fg full"><input type="text" id="p-addr" value="${PROFILE.address}" placeholder="Street / House Address"></div>
+                        <div class="fg"><input type="text" id="p-city" value="${PROFILE.city}" placeholder="City"></div>
+                        <div class="fg"><input type="text" id="p-pin" value="${PROFILE.pincode}" placeholder="Pincode"></div>
+                    </div>
+                    <button type="submit" class="btn-cart" style="width:100%; padding:9px;">Save Address</button>
+                </form>
+
+                <h4 style="margin-bottom:8px;">Your Order History</h4>
+                <div id="orders-list-box">Loading orders...</div>
+            `;
+            openModal('account-modal');
+            loadOrders(PROFILE.phone);
+        }
+
+        async function submitLogin(e) {
+            e.preventDefault();
+            const res = await fetch('/api/auth/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({ email: document.getElementById('l-email').value, password: document.getElementById('l-pass').value }),
+            });
+            const data = await res.json();
+            if (!res.ok) return alert(data.error);
+            toast(data.message);
+            window.location.reload();
+        }
+
+        async function submitRegister(e) {
+            e.preventDefault();
+            const res = await fetch('/api/auth/register/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({
+                    full_name: document.getElementById('r-name').value,
+                    phone: document.getElementById('r-phone').value,
+                    email: document.getElementById('r-email').value,
+                    password: document.getElementById('r-pass').value,
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) return alert(data.error);
+            toast(data.message);
+            window.location.reload();
+        }
+
+        async function doLogout() {
+            await fetch('/api/auth/logout/', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') } });
+            window.location.reload();
+        }
+
+        async function saveCustomerProfile(e) {
+            e.preventDefault();
+            const res = await fetch('/api/profile/save/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({
+                    full_name: document.getElementById('p-name').value,
+                    phone: document.getElementById('p-phone').value,
+                    address: document.getElementById('p-addr').value,
+                    city: document.getElementById('p-city').value,
+                    pincode: document.getElementById('p-pin').value,
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) return alert(data.error);
+            toast(data.message);
+            window.location.reload();
+        }
+
+        async function loadOrders(phone) {
+            const box = document.getElementById('orders-list-box');
+            if (!box) return;
+            box.innerHTML = '<p style="font-size:12.5px; color:var(--muted);">Loading...</p>';
+            const q = phone ? `?phone=${encodeURIComponent(phone)}` : '';
+            const res = await fetch(`/api/track-orders/${q}`);
+            const data = await res.json();
+            if (!data.orders || !data.orders.length) {
+                box.innerHTML = '<p style="font-size:12.5px; color:var(--muted);">No orders found.</p>';
+                return;
+            }
+            box.innerHTML = data.orders.map(o => {
+                const itemsStr = o.items.map(i => `${i.name} [${i.size}] x${i.qty}`).join(', ');
+                const safeObj = encodeURIComponent(JSON.stringify(o));
+                return `
+                    <div style="border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:10px; font-size:12.5px;">
+                        <div style="display:flex; justify-content:space-between; font-weight:800;">
+                            <span>Order #${o.id} • ₹${o.total_amount}</span>
+                            <span style="color:var(--accent);">${o.status}</span>
+                        </div>
+                        <div style="color:var(--muted); margin:3px 0;">${o.date} • ${o.payment_method} (${o.is_paid ? 'Paid' : 'Unpaid'})</div>
+                        <div style="margin-bottom:8px;">${itemsStr}</div>
+                        ${o.exchange_requested ? `<div style="color:var(--green); font-weight:700; margin-bottom:6px;">Size Exchange Requested: ${o.exchange_size}</div>` : ''}
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" class="btn-info" style="padding:5px 10px; font-size:11.5px;"
+                                    onclick="openReceiptFromEncoded('${safeObj}', ${o.is_paid})">Invoice</button>
+                            ${o.can_cancel ? `<button type="button" class="btn-info" style="padding:5px 10px; font-size:11.5px; color:var(--red);" onclick="cancelOrder(${o.id})">Cancel Order</button>` : ''}
+                            ${o.can_exchange ? `<button type="button" class="btn-info" style="padding:5px 10px; font-size:11.5px; color:var(--accent);" onclick="exchangeOrder(${o.id})">7-Day Size Exchange</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openReceiptFromEncoded(encoded, paidOnline) {
+            try {
+                const obj = JSON.parse(decodeURIComponent(encoded));
+                showReceiptModal(obj, Boolean(paidOnline));
+            } catch (e) {}
+        }
+
+        async function cancelOrder(orderId) {
+            const reason = prompt('Reason for cancelling order (optional):') || 'Cancelled by customer';
+            const res = await fetch('/api/orders/cancel/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({ order_id: orderId, reason }),
+            });
+            const data = await res.json();
+            if (!res.ok) return alert(data.error);
+            toast(`Order #${orderId} cancelled & stock restored.`);
+            loadOrders(PROFILE ? PROFILE.phone : document.getElementById('lookup-phone')?.value.trim());
+        }
+
+        async function exchangeOrder(orderId) {
+            const newSize = prompt('Enter new UK size (UK 6, UK 7, UK 8, UK 9, UK 10):', 'UK 8');
+            if (!newSize) return;
+            const reason = prompt('Reason for size exchange:') || 'Size exchange request';
+            const res = await fetch('/api/orders/exchange/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
+                body: JSON.stringify({ order_id: orderId, exchange_size: newSize, reason }),
+            });
+            const data = await res.json();
+            if (!res.ok) return alert(data.error);
+            toast(`Exchange request submitted for ${newSize}!`);
+            loadOrders(PROFILE ? PROFILE.phone : document.getElementById('lookup-phone')?.value.trim());
+        }
+
+        initSizes();
+        renderRecent();
+        renderCart();
+        renderWish();
+    </script>
+</body>
+</html>
